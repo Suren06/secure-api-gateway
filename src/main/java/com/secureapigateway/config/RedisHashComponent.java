@@ -1,0 +1,32 @@
+package com.secureapigateway.config;
+
+import com.secureapigateway.util.MapperUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+
+@Component
+@Slf4j
+@RequiredArgsConstructor
+public class RedisHashComponent {
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public void hSet(String key, Object hashKey, Object value){
+        Map ruleHash = MapperUtils.objectMapper(value, Map.class);
+        redisTemplate.opsForHash().put(key, hashKey, ruleHash);
+    }
+
+    public List<Object> hValues(String key){
+        return redisTemplate.opsForHash().values(key);
+    }
+
+    public Object hGet(String key, Object hashKey){
+        return redisTemplate.opsForHash().get(key, hashKey);
+    }
+
+}
